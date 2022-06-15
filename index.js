@@ -42,6 +42,27 @@ app.get("/deleteplayer", (req, res) => {
 })
 
 
+// fetch team with players.
+app.get("/onetoone", (req,res)=>{
+    Team.findAll({where: {name: "RCB"},include : [{model: Player }]}).then((players)=>{
+        res.send(players);
+    }).catch((err)=>{
+        if(err){
+            console.log(err);
+        }
+    })
+})
+// one-to-one association
+// app.get("/onetoone", (req,res)=>{
+//     Player.findAll({where: {name: "ABD"},include : [{model: Team }]}).then((players)=>{
+//         res.send(players);
+//     }).catch((err)=>{
+//         if(err){
+//             console.log(err);
+//         }
+//     })
+// })
+
 app.get("/select", (req, res) => {
     Team.findAll().then((team) => {
         res.send(team);
@@ -67,6 +88,10 @@ app.get("/delete", (req, res) => {
     Team.destroy({ where: { id: 1 } })
     res.send("deleted");
 })
+db.Team.hasOne(db.Player );
+db.Player.belongsTo(db.Team,{foreignKey:{
+    allopwNull: false
+}});
 
 app.use(express.json());
 
